@@ -47,7 +47,16 @@ class OrderServiceTest {
         assertEquals("상품 주문 시 상태는 ORDER", OrderStatus.ORDER, getOrder.getStatus());
         assertEquals("주문한 상품 종류 수가 정확해야 한다", 1, getOrder.getOrderItems().size());
         assertEquals("주문 가격은 가격 * 수량이다", 10000* orderCount, getOrder.getTotalPrice());
-        assertEquals("주문 수량만큼 재고가 줄어야 힌디", 8, book.getStockQuantity())
+        assertEquals("주문 수량만큼 재고가 줄어야 힌디", 8, book.getStockQuantity());
+    }
+
+    private Member createMember() {
+        Member member = new Member();
+        member.setName("회원1");
+        member.setAddress(new Address("서울", "경기", "123-123"));
+        em.persist(member);
+
+        return member;
     }
 
     private Item createBook(String name, int price, int stockQuantity) {
@@ -57,14 +66,6 @@ class OrderServiceTest {
         book.setStockQuantity(stockQuantity);
         em.persist(book);
         return book;
-    }
-
-    private Member createMember() {
-        Member member = new Member();
-        member.setName("회원1");
-        member.setAddress(new Address("서울", "경기", "123-123"));
-        em.persist(member);
-        return member;
     }
 
     @Test(expected = NotEnoughStockException.class)
@@ -98,6 +99,6 @@ class OrderServiceTest {
         Order getOrder = orderRepository.findOne(orderId);
 
         assertEquals("주문 취소시 상태는 CANCEL이다", OrderStatus.CANCEL, getOrder.getStatus());
-        assertEquals("ㅈㅜ문이 취소된 상품은 재고가 다시 증가해야 한다" 10, book.getStockQuantity());
+        assertEquals("ㅈㅜ문이 취소된 상품은 재고가 다시 증가해야 한다", 10, book.getStockQuantity());
     }
 }
