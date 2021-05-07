@@ -3,3 +3,8 @@
  - 별도의 DTO를 만들어서 API를 설계
  - 엔티티를 노출하면 엔티티가 변경되는 순간 API 스펙 자체가 변경되는 문제 
  - DTO를 만들게 되면 API request에 필요한 값들만 정의해서 개발자들간의 혼선을 줄일 수 있음. 
+
+
+---
+#Refrence
+https://www.inflearn.com/course/스프링부트-JPA-API개발-성능최적화/dashboard
