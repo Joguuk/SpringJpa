@@ -77,4 +77,37 @@ public class OrderRepository {
                         " join fetch o.delivery d", Order.class
         ).getResultList();
     }
+
+    public List<Order> findAllWithItem() {
+        /**
+         * distinct를 이용하면 root entity(여기서는 Order)의 중복을 제거해서 어플리케이션의 List에 반환해준다.
+         * 단점
+         *  - 페이징 쿼리가 불가능!(컬렉션을 패치 조인하면 페이징이 불가능하다. 일대다 조인이 발생하여 데이터가 예측할 수 없이 증가하기 때문)
+         *  - 1을 기준으로 페이징하고 싶지만 데이터는 다를 기준으로 row가 생성
+         *  - Hibernated에서 자체적으로 warning을 알리며 메모리에서 페이징을 하지만, 최악의 경우 장애로 이어질 수 있기 때문에 사용하면 안됨.(out of memory 가능성)
+         *
+         *  그러면 페이징 + 컬렉션 엔티티를 함께 조회하려면 어떻게 해야할까?
+         *   1. toOne 관계는 row를 증가시키지 않기 때문에 페이징에 문제가 없다.
+         *   2. 컬렉션은 지연로딩으로 조회한다.
+         *   3. 정답은 default_batch_fetch_size.
+         *      설정한 사이즈만큼 in 쿼리로 한 번에 가져온다.
+         */
+        return em.createQuery(
+                "select distinct o from Order o" +
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d" +
+                        " join fetch o.orderItems oi" +
+                        " join fetch oi.item i", Order.class)
+                .getResultList();
+    }
+
+    public List<Order> findAllWithMemberDelivery(int offset, int limit) {
+        return em.createQuery(
+                "select o from Order o" +
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d", Order.class)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
+    }
 }
