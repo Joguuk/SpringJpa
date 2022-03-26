@@ -1,11 +1,15 @@
 package com.jjozerg.jkhr.member.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.jjozerg.jkhr.vacation.entity.VacationRequest;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.util.ArrayList;
+import java.util.List;
 
-import static com.jjozerg.jkhr.common.HrConstants.MemberStatus;
+import static com.jjozerg.jkhr.common.jkhrConstants.*;
 
 /**
  * packageName : com.jjozerg.jkhr.member.entity
@@ -40,8 +44,8 @@ public class Member {
 
     @NotEmpty
     private String memberName;
-//
-//    @JsonIgnore
-//    @OneToMany(mappedBy = "member")
-//    private List<VacationRequest> vacationReqs = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "member")
+    private List<VacationRequest> vacationReqs = new ArrayList<>();
 }

@@ -4,17 +4,17 @@ import lombok.Getter;
 
 /**
  * packageName : com.jjozerg.jkhr.common
- * fileName : HrConstants
+ * fileName : JkHrConstants
  * author : joguk
  * date : 2022/02/12
- * description : 상수 클래스
+ * description : CroquiscomHr 상수 클래스
  * ===========================================================
  * DATE AUTHOR NOTE
  * 2022/02/12 joguk 최초 생성
  * -----------------------------------------------------------
  */
-public class HrConstants {
-    private HrConstants() {}
+public class JkHrConstants {
+    private JkHrConstants() {}
 
     // 로그인 세션 key String
     public static final String LOGIN_MEMBER = "loginMember";
@@ -81,6 +81,10 @@ public class HrConstants {
         VacationStatus(String vacationStatusCode, String vacationStatusName) {
             this.vacationStatusCode = vacationStatusCode;
             this.vacationStatusName = vacationStatusName;
+        }
+
+        public boolean isCancel() {
+            return this.equals(CANCEL);
         }
     }
 }

@@ -1,6 +1,6 @@
 package com.jjozerg.jkhr.member.controller;
 
-import com.jjozerg.jkhr.common.HrConstants;
+import com.jjozerg.jkhr.common.JkHrConstants;
 import com.jjozerg.jkhr.member.dto.MemberResDto;
 import com.jjozerg.jkhr.member.entity.Member;
 import com.jjozerg.jkhr.member.service.MemberService;
@@ -51,7 +51,7 @@ public class MemberController {
 
         // 세션 저장
         HttpSession session = request.getSession();
-        session.setAttribute(HrConstants.LOGIN_MEMBER, member);
+        session.setAttribute(JkHrConstants.LOGIN_MEMBER, member);
 
         return member.getMemberName();
     }

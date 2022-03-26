@@ -1,6 +1,7 @@
 package com.jjozerg.jkhr.member.service;
 
 import com.jjozerg.jkhr.common.MessageUtils;
+import com.jjozerg.jkhr.config.exception.BusinessException;
 import com.jjozerg.jkhr.member.entity.Member;
 import com.jjozerg.jkhr.member.repository.MemberRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +46,7 @@ public class MemberService {
         Member member = optionalMember.orElseThrow(() -> new NoSuchElementException(MessageUtils.getMessages("message.member.notfound.error")));
 
         if (!passwordEncoder.matches(loginPassword, member.getMemberPassword())) {
-            throw new NoSuchElementException(MessageUtils.getMessages("message.member.password.notmatched"));
+            throw new BusinessException(MessageUtils.getMessages("message.member.password.notmatched"));
         }
 
         return member;
