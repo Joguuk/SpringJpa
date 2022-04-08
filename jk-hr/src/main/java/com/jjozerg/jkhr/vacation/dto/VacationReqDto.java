@@ -7,7 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-import static com.jjozerg.jkhr.common.jkhrConstants.*;
+import static com.jjozerg.jkhr.common.JkHrConstants.*;
 
 /**
  * packageName : com.jjozerg.jkhr.vacation.dto

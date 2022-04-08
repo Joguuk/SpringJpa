@@ -9,7 +9,7 @@ import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.jjozerg.jkhr.common.jkhrConstants.*;
+import static com.jjozerg.jkhr.common.JkHrConstants.*;
 
 /**
  * packageName : com.jjozerg.jkhr.member.entity

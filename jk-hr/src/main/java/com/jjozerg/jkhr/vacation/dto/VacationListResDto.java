@@ -7,8 +7,8 @@ import lombok.ToString;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.jjozerg.jkhr.common.jkhrConstants.VacationKind;
-import static com.jjozerg.jkhr.common.jkhrConstants.VacationStatus;
+import static com.jjozerg.jkhr.common.JkHrConstants.VacationKind;
+import static com.jjozerg.jkhr.common.JkHrConstants.VacationStatus;
 import static com.jjozerg.jkhr.vacation.entity.VacationRequest.DEFAULT_VACATION_COUNT;
 
 /**

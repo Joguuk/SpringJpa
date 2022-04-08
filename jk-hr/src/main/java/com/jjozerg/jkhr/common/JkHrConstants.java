@@ -7,7 +7,7 @@ import lombok.Getter;
  * fileName : JkHrConstants
  * author : joguk
  * date : 2022/02/12
- * description : CroquiscomHr 상수 클래스
+ * description : JkHrConstants 상수 클래스
  * ===========================================================
  * DATE AUTHOR NOTE
  * 2022/02/12 joguk 최초 생성

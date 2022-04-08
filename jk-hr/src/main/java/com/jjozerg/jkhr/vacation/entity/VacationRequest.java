@@ -9,10 +9,10 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-import static com.jjozerg.jkhr.common.jkhrConstants.VacationKind;
-import static com.jjozerg.jkhr.common.jkhrConstants.VacationStatus;
-import static com.jjozerg.jkhr.common.jkhrConstants.VacationStatus.*;
-import static com.jjozerg.jkhr.common.jkhrConstants.VacationStatus.CANCEL;
+import static com.jjozerg.jkhr.common.JkHrConstants.VacationKind;
+import static com.jjozerg.jkhr.common.JkHrConstants.VacationStatus;
+import static com.jjozerg.jkhr.common.JkHrConstants.VacationStatus.*;
+import static com.jjozerg.jkhr.common.JkHrConstants.VacationStatus.CANCEL;
 
 /**
  * packageName : com.jjozerg.jkhr.vacation.entity

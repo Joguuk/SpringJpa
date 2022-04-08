@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import static com.jjozerg.jkhr.common.jkhrConstants.VacationStatus.*;
-import static com.jjozerg.jkhr.common.jkhrConstants.VacationStatus.REQUEST;
+import static com.jjozerg.jkhr.common.JkHrConstants.VacationStatus.*;
+import static com.jjozerg.jkhr.common.JkHrConstants.VacationStatus.REQUEST;
 import static com.jjozerg.jkhr.vacation.dto.VacationListResDto.*;
 
 /**
