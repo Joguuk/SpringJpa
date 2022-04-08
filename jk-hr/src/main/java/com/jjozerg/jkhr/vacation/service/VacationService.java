@@ -15,9 +15,9 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import static com.jjozerg.jkhr.common.JkHrConstants.VacationStatus.*;
 import static com.jjozerg.jkhr.common.JkHrConstants.VacationStatus.REQUEST;
-import static com.jjozerg.jkhr.vacation.dto.VacationListResDto.*;
+import static com.jjozerg.jkhr.vacation.dto.VacationListResDto.VacationListDto;
+import static com.jjozerg.jkhr.vacation.entity.VacationRequest.DEFAULT_VACATION_COUNT;
 
 /**
  * packageName : com.jjozerg.jkhr.vacation.service
@@ -57,15 +57,50 @@ public class VacationService {
     }
 
     /**
-     * 휴가를 저장한다.
+     * 신청 받은 휴가를 저장하고, 남은 휴가일 수를 반환한다.
      *
      * @author joguk
      * @date 2022/02/13 5:30 오후
      */
-    public Long saveVacation(VacationReqDto vacationReqDto) throws Exception {
-        Optional<Member> optionalMember = memberRepository.findById(vacationReqDto.getMemberId());
-        Member member = optionalMember.orElseThrow(() -> new NoSuchElementException(MessageUtils.getMessages("message.member.notfound.error")));
 
+    public double requestVacation(VacationReqDto vacationReqDto) throws Exception {
+        vacationReqDto.validateVacationRequest();
+
+        Optional<Member> optionalMember = memberRepository.findById(vacationReqDto.getMemberId());
+        Member member = optionalMember.orElseThrow(
+                () -> new NoSuchElementException(MessageUtils.getMessages("message.login.fail.notfound.error")));   // 회원 데이터 없습니다.
+
+        VacationRequest vacationRequest = saveVacation(vacationReqDto, member);
+        Double useVacationCount = vacationRepository.retrieveVacationCount(vacationReqDto.getMemberId(), vacationReqDto.getVacationYear());
+
+        return getRemainingVacationCount(useVacationCount);
+    }
+
+    /**
+     * 휴가신청 가능여부를 확인한다.
+     *
+     * @author joguk
+     * @date 2022/02/13 7:48 오후
+     */
+    private boolean isVacationRequestPossible(VacationRequest vacationRequest, VacationReqDto vacationReqDto) throws Exception {
+        Double useVacationCount = vacationRepository.retrieveVacationCount(vacationReqDto.getMemberId(), vacationReqDto.getVacationYear());
+        vacationRequest.checkVacationCount(useVacationCount);
+
+        boolean isDuplicateVacationDate = vacationRepository.retrieveIsDuplicateVacationDate(vacationReqDto.getMemberId(), vacationReqDto.getVacationYear()
+                , vacationReqDto.getVacationStartDttm(), vacationReqDto.getVacationEndDttm());
+
+        vacationRequest.checkVacationDuplicateDate(isDuplicateVacationDate);
+
+        return true;
+    }
+
+    /**
+     * 휴가를 저장한다.
+     *
+     * @author joguk
+     * @date 2022/02/14 10:01 오후
+     */
+    private VacationRequest saveVacation(VacationReqDto vacationReqDto, Member member) throws Exception {
         VacationRequest vacationRequest = VacationRequest.builder()
                 .member(member)
                 .vacationStatus(REQUEST)
@@ -81,20 +116,17 @@ public class VacationService {
             vacationRepository.save(vacationRequest);
         }
 
-        return vacationRequest.getId();
+        return vacationRequest;
     }
 
     /**
-     * 휴가신청가능여부를 확인한다.
+     * 남은 휴가 일수를 반환한다.
      *
      * @author joguk
-     * @date 2022/02/13 7:48 오후
+     * @date 2022/02/14 10:05 오후
      */
-    private boolean isVacationRequestPossible(VacationRequest vacationRequest, VacationReqDto vacationReqDto) throws Exception {
-        Double useVacationCount = vacationRepository.retrieveVacationCount(vacationReqDto.getMemberId(), vacationReqDto.getVacationYear());
-        vacationRequest.checkVacationCount(useVacationCount);
-
-        return true;
+    public double getRemainingVacationCount(Double useVacationCount) {
+        return DEFAULT_VACATION_COUNT - useVacationCount;
     }
 
     /**
@@ -106,7 +138,7 @@ public class VacationService {
     public Long cancelVacation(Long vacationReqId) {
         Optional<VacationRequest> optionalVacationRequest = vacationRepository.findById(vacationReqId);
         VacationRequest vacationRequest = optionalVacationRequest.orElseThrow(
-                () -> new NoSuchElementException(MessageUtils.getMessages("message.member.notfound.error")));
+                () -> new NoSuchElementException(MessageUtils.getMessages("message.login.fail.notfound.error")));   // 회원 데이터 없습니다.
 
         // 취소 상태로 변경
         vacationRequest.cancelVacation();

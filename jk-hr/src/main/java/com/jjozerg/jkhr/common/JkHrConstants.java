@@ -62,6 +62,36 @@ public class JkHrConstants {
             this.vacationKindName = vacationKindName;
             this.vacationHolidayQt = vacationHolidayQt;
         }
+
+        /**
+         * 연차 여부를 반환한다.
+         *
+         * @author joguk
+         * @date 2022/02/14 11:12 오후
+         */
+        public boolean isAll() {
+            return this.equals(ALL);
+        }
+
+        /**
+         * 반차 여부를 반환한다.
+         *
+         * @author joguk
+         * @date 2022/02/14 11:44 오후
+         */
+        public boolean isHalf() {
+            return this.equals(HALF);
+        }
+
+        /**
+         * 반반차 여부를 반환한다.
+         *
+         * @author joguk
+         * @date 2022/02/14 11:44 오후
+         */
+        public boolean isQuarter() {
+            return this.equals(QUARTER);
+        }
     }
 
     /**

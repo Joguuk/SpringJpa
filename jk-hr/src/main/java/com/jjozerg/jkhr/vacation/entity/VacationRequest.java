@@ -33,7 +33,7 @@ import static com.jjozerg.jkhr.common.JkHrConstants.VacationStatus.CANCEL;
 @Builder
 public class VacationRequest {
     @Transient
-    public static final Integer DEFAULT_VACATION_COUNT = 15;
+    public static final Integer DEFAULT_VACATION_COUNT = 15;    // 부여받은 휴가 일수
 
     @Id @GeneratedValue
     @Column(name = "vacation_req_id")
@@ -68,7 +68,7 @@ public class VacationRequest {
      */
     public boolean checkVacationCount(Double useVacationCount) throws Exception {
         if (useVacationCount + vacationCount >= DEFAULT_VACATION_COUNT) {
-            throw new Exception(MessageUtils.getMessages("message.vacation.max.count"));
+            throw new Exception(MessageUtils.getMessages("message.vacation.request.fail.max.count"));    // 신청 가능한 휴가 가능일수를 초과했습니다.
         }
 
         return true;
@@ -96,15 +96,29 @@ public class VacationRequest {
         LocalDateTime now = LocalDateTime.now();
 
         if (vacationStatus.isCancel()) {
-            throw new BusinessException(MessageUtils.getMessages("message.vacation.canceled"));
+            throw new BusinessException(MessageUtils.getMessages("message.vacation.cancel.fail.canceled")); // 이미 취소 처리된 휴가입니다.
         }
 
         if (now.isAfter(vacationEndDttm)) {
-            throw new BusinessException(MessageUtils.getMessages("message.vacation.last.cancel"));
+            throw new BusinessException(MessageUtils.getMessages("message.vacation.cancel.fail.last"));  // 사용일이 경과된 휴가는 취소할 수 없습니다.
         }
 
         if (now.isAfter(vacationStartDttm) && now.isBefore(vacationEndDttm)) {
-            throw new BusinessException(MessageUtils.getMessages("message.vacation.in.use.cancel"));
+            throw new BusinessException(MessageUtils.getMessages("message.vacation.cancel.fail.in.use"));    // 진행중인 휴가는 취소할 수 없습니다.
+        }
+
+        return true;
+    }
+
+    /**
+     * 신청 일자에 휴가가 중복 신청된 경우, BusinessException을 발생시킨다.
+     *
+     * @author joguk
+     * @date 2022/02/14 10:40 오후
+     */
+    public boolean checkVacationDuplicateDate(boolean isDuplicateVacationDate) {
+        if (isDuplicateVacationDate) {
+            throw new BusinessException(MessageUtils.getMessages("message.vacation.request.fail.duplicate"));    // 신청하신 휴가 일자에 이미 휴가가 신청되어 있습니다.
         }
 
         return true;

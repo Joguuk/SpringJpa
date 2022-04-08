@@ -43,10 +43,10 @@ public class MemberService {
      */
     public Member login(String loginId, String loginPassword) {
         Optional<Member> optionalMember = memberRepository.findOptionalByMemberLoginId(loginId);
-        Member member = optionalMember.orElseThrow(() -> new NoSuchElementException(MessageUtils.getMessages("message.member.notfound.error")));
+        Member member = optionalMember.orElseThrow(() -> new NoSuchElementException(MessageUtils.getMessages("message.login.fail.notfound.error")));
 
         if (!passwordEncoder.matches(loginPassword, member.getMemberPassword())) {
-            throw new BusinessException(MessageUtils.getMessages("message.member.password.notmatched"));
+            throw new BusinessException(MessageUtils.getMessages("message.login.fail.password.notmatched"));
         }
 
         return member;

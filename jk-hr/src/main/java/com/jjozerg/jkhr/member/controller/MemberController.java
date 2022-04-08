@@ -1,9 +1,11 @@
 package com.jjozerg.jkhr.member.controller;
 
 import com.jjozerg.jkhr.common.JkHrConstants;
+import com.jjozerg.jkhr.common.MessageUtils;
 import com.jjozerg.jkhr.member.dto.MemberResDto;
 import com.jjozerg.jkhr.member.entity.Member;
 import com.jjozerg.jkhr.member.service.MemberService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,6 +44,7 @@ public class MemberController {
      * @author joguk
      * @date 2022/02/12 4:51 오후
      */
+    @Operation(summary = "로그인", description = "전달받은 ID와 PASSWORD를 통해 로그인을 수행한다.")
     @GetMapping("/login")
     public String login(
             @RequestParam   @NotEmpty String loginId,
@@ -53,16 +56,16 @@ public class MemberController {
         HttpSession session = request.getSession();
         session.setAttribute(JkHrConstants.LOGIN_MEMBER, member);
 
-        return member.getMemberName();
+        return MessageUtils.getMessages("message.login.success", new Object[]{member.getMemberName()});
     }
 
     /**
      * 사용자 목록을 조회한다.
      *
-     * @return
      * @author
      * @date 2022/02/11 10:08 오후
      */
+    @Operation(summary = "회원 목록 조회", description = "사용자 목록을 조회한다.")
     @GetMapping
     public List<MemberResDto> selectMembers() {
         List<Member> members = memberService.selectMembers();
