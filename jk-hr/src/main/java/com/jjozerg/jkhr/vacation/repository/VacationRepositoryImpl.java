@@ -1,5 +1,6 @@
 package com.jjozerg.jkhr.vacation.repository;
 
+import com.jjozerg.jkhr.common.CroquiscomHrConstants;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -8,7 +9,9 @@ import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.jjozerg.jkhr.common.JkHrConstants.VacationStatus.CANCEL;
+import static com.jjozerg.jkhr.common.CroquiscomHrConstants.*;
+import static com.jjozerg.jkhr.common.CroquiscomHrConstants.VacationStatus.*;
+import static com.jjozerg.jkhr.common.CroquiscomHrConstants.VacationStatus.CANCEL;
 import static com.jjozerg.jkhr.vacation.dto.VacationListResDto.VacationListDto;
 import static com.jjozerg.jkhr.vacation.entity.QVacationRequest.vacationRequest;
 
@@ -44,7 +47,8 @@ public class VacationRepositoryImpl implements VacationRepositoryCustom{
                 .from(vacationRequest)
                 .where(
                         isEqualMember(memberId),
-                        isEqualVacationYear(vactionYear)
+                        isEqualVacationYear(vactionYear),
+                        vacationRequest.vacationStatus.eq(REQUEST)
                 )
                 .fetchOne();
 

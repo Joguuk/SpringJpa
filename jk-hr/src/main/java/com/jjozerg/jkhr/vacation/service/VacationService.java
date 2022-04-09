@@ -1,6 +1,7 @@
 package com.jjozerg.jkhr.vacation.service;
 
 import com.jjozerg.jkhr.common.MessageUtils;
+import com.jjozerg.jkhr.config.exception.BusinessException;
 import com.jjozerg.jkhr.member.entity.Member;
 import com.jjozerg.jkhr.member.repository.MemberRepository;
 import com.jjozerg.jkhr.vacation.dto.VacationListResDto;
@@ -15,9 +16,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import static com.jjozerg.jkhr.common.JkHrConstants.VacationStatus.REQUEST;
+import static com.jjozerg.jkhr.common.CroquiscomHrConstants.VacationStatus.REQUEST;
 import static com.jjozerg.jkhr.vacation.dto.VacationListResDto.VacationListDto;
-import static com.jjozerg.jkhr.vacation.entity.VacationRequest.DEFAULT_VACATION_COUNT;
 
 /**
  * packageName : com.jjozerg.jkhr.vacation.service
@@ -50,48 +50,26 @@ public class VacationService {
      * @date 2022/02/13 5:30 오후
      */
     public VacationListResDto retrieveVacations(Long memberId, Integer vacationYear) {
-        Double useVacationCount = vacationRepository.retrieveVacationCount(memberId, vacationYear);
-        List<VacationListDto> vacationListDtos = vacationRepository.retrieveVacationList(memberId, vacationYear);
+        Double usedVacationCount = vacationRepository.retrieveVacationCount(memberId, vacationYear);
+        List<VacationListDto> vacationListDtoList = vacationRepository.retrieveVacationList(memberId, vacationYear);
 
-        return new VacationListResDto(useVacationCount, vacationListDtos);
+        return new VacationListResDto(usedVacationCount, vacationListDtoList);
     }
 
     /**
-     * 신청 받은 휴가를 저장하고, 남은 휴가일 수를 반환한다.
+     * 신청 받은 휴가를 저장하고, 남은 휴가일수를 반환한다.
      *
      * @author joguk
      * @date 2022/02/13 5:30 오후
      */
-
     public double requestVacation(VacationReqDto vacationReqDto) throws Exception {
-        vacationReqDto.validateVacationRequest();
+        Double usedVacationCount = vacationRepository.retrieveVacationCount(vacationReqDto.getMemberId(), vacationReqDto.getVacationYear());
+        vacationReqDto.validateVacationRequest(usedVacationCount);
 
-        Optional<Member> optionalMember = memberRepository.findById(vacationReqDto.getMemberId());
-        Member member = optionalMember.orElseThrow(
-                () -> new NoSuchElementException(MessageUtils.getMessages("message.login.fail.notfound.error")));   // 회원 데이터 없습니다.
-
+        Member member = getMember(vacationReqDto);
         VacationRequest vacationRequest = saveVacation(vacationReqDto, member);
-        Double useVacationCount = vacationRepository.retrieveVacationCount(vacationReqDto.getMemberId(), vacationReqDto.getVacationYear());
 
-        return getRemainingVacationCount(useVacationCount);
-    }
-
-    /**
-     * 휴가신청 가능여부를 확인한다.
-     *
-     * @author joguk
-     * @date 2022/02/13 7:48 오후
-     */
-    private boolean isVacationRequestPossible(VacationRequest vacationRequest, VacationReqDto vacationReqDto) throws Exception {
-        Double useVacationCount = vacationRepository.retrieveVacationCount(vacationReqDto.getMemberId(), vacationReqDto.getVacationYear());
-        vacationRequest.checkVacationCount(useVacationCount);
-
-        boolean isDuplicateVacationDate = vacationRepository.retrieveIsDuplicateVacationDate(vacationReqDto.getMemberId(), vacationReqDto.getVacationYear()
-                , vacationReqDto.getVacationStartDttm(), vacationReqDto.getVacationEndDttm());
-
-        vacationRequest.checkVacationDuplicateDate(isDuplicateVacationDate);
-
-        return true;
+        return vacationRequest.getRemainingVacationCount(usedVacationCount);
     }
 
     /**
@@ -112,7 +90,7 @@ public class VacationService {
                 .note(vacationReqDto.getNote())
                 .build();
 
-        if (isVacationRequestPossible(vacationRequest, vacationReqDto)) {
+        if (checkVacationDuplicateDate(vacationRequest, vacationReqDto)) {
             vacationRepository.save(vacationRequest);
         }
 
@@ -120,13 +98,20 @@ public class VacationService {
     }
 
     /**
-     * 남은 휴가 일수를 반환한다.
+     * 신청 일자에 휴가가 중복 신청된 경우, 메세지와 함께 BusinessException을 발생시킨다.
      *
      * @author joguk
-     * @date 2022/02/14 10:05 오후
+     * @date 2022/02/13 7:48 오후
      */
-    public double getRemainingVacationCount(Double useVacationCount) {
-        return DEFAULT_VACATION_COUNT - useVacationCount;
+    private boolean checkVacationDuplicateDate(VacationRequest vacationRequest, VacationReqDto vacationReqDto) throws Exception {
+        boolean isDuplicateVacationDate = vacationRepository.retrieveIsDuplicateVacationDate(vacationReqDto.getMemberId(), vacationReqDto.getVacationYear()
+                , vacationReqDto.getVacationStartDttm(), vacationReqDto.getVacationEndDttm());
+
+        if (isDuplicateVacationDate) {
+            throw new BusinessException(MessageUtils.getMessages("message.vacation.request.fail.duplicate"));    // 신청하신 휴가 일자에 이미 휴가가 신청되어 있습니다.
+        }
+
+        return true;
     }
 
     /**
@@ -144,5 +129,18 @@ public class VacationService {
         vacationRequest.cancelVacation();
 
         return vacationRequest.getId();
+    }
+
+    /**
+     * 회원 정보를 조회하여 반환한다.
+     *
+     * @author joguk
+     * @date 2022/02/15 10:57 오후
+     */
+    private Member getMember(VacationReqDto vacationReqDto) {
+        Optional<Member> optionalMember = memberRepository.findById(vacationReqDto.getMemberId());
+        Member member = optionalMember.orElseThrow(
+                () -> new NoSuchElementException(MessageUtils.getMessages("message.login.fail.notfound.error")));   // 회원 데이터 없습니다.
+        return member;
     }
 }

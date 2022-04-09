@@ -7,9 +7,9 @@ import lombok.ToString;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.jjozerg.jkhr.common.JkHrConstants.VacationKind;
-import static com.jjozerg.jkhr.common.JkHrConstants.VacationStatus;
-import static com.jjozerg.jkhr.vacation.entity.VacationRequest.DEFAULT_VACATION_COUNT;
+import static com.jjozerg.jkhr.common.CroquiscomHrConstants.VacationCount.DEFAULT;
+import static com.jjozerg.jkhr.common.CroquiscomHrConstants.VacationKind;
+import static com.jjozerg.jkhr.common.CroquiscomHrConstants.VacationStatus;
 
 /**
  * packageName : com.jjozerg.jkhr.vacation.dto
@@ -32,12 +32,13 @@ public class VacationListResDto {
 
     public VacationListResDto(Double useVacationCount, List<VacationListDto> vacationListDtos) {
         this.useVacationCount = useVacationCount;
-        this.remainingVacationCount = DEFAULT_VACATION_COUNT - useVacationCount;
+        this.remainingVacationCount = DEFAULT.getVacationCount() - useVacationCount;
         this.vacationListDtos = vacationListDtos;
     }
 
     @Getter @ToString
     public static class VacationListDto {
+        private Long vacationReqId;
         private Double vacationCount;
         private Integer vacationYear;
         private VacationStatus vacationStatus;

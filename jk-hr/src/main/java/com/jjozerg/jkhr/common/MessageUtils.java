@@ -26,6 +26,12 @@ public class MessageUtils {
         return getMessages(code, null);
     }
 
+    /**
+     * messageSource를 통해 메세지를 조회하여 반환한다.
+     *
+     * @author joguk
+     * @date 2022/02/17 11:29 오후
+     */
     public static String getMessages(String code, Object[] objects) {
         try {
             return messageSource.getMessage(code, objects,null);

@@ -4,17 +4,17 @@ import lombok.Getter;
 
 /**
  * packageName : com.jjozerg.jkhr.common
- * fileName : JkHrConstants
+ * fileName : CroquiscomHrConstants
  * author : joguk
  * date : 2022/02/12
- * description : JkHrConstants 상수 클래스
+ * description : CroquiscomHr 상수 클래스
  * ===========================================================
  * DATE AUTHOR NOTE
  * 2022/02/12 joguk 최초 생성
  * -----------------------------------------------------------
  */
-public class JkHrConstants {
-    private JkHrConstants() {}
+public class CroquiscomHrConstants {
+    private CroquiscomHrConstants() {}
 
     // 로그인 세션 key String
     public static final String LOGIN_MEMBER = "loginMember";
@@ -91,6 +91,23 @@ public class JkHrConstants {
          */
         public boolean isQuarter() {
             return this.equals(QUARTER);
+        }
+    }
+
+    /**
+     * 휴가 수 enum class
+     *
+     * @author joguk
+     * @date 2022/02/15 10:36 오후
+     */
+    @Getter
+    public enum VacationCount {
+        DEFAULT(15);
+
+        private int vacationCount;
+
+        VacationCount(int vacationCount) {
+            this.vacationCount = vacationCount;
         }
     }
 

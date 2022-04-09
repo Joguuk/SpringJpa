@@ -11,7 +11,7 @@ import javax.naming.AuthenticationException;
 import java.util.NoSuchElementException;
 
 /**
- * packageName : com.jjozerg..config.exception
+ * packageName : com.jjozerg.jkhr.config.exception
  * fileName : ExControllerAdvice
  * author : joguk
  * date : 2022/02/11

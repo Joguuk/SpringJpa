@@ -2,6 +2,7 @@ package com.jjozerg.jkhr.vacation.repository;
 
 import com.jjozerg.jkhr.vacation.entity.VacationRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  * packageName : com.jjozerg.jkhr.vacation.repository

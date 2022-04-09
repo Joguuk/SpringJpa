@@ -6,7 +6,7 @@ import com.jjozerg.jkhr.vacation.dto.VacationReqDto;
 import com.jjozerg.jkhr.vacation.service.VacationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -27,8 +27,8 @@ import javax.validation.constraints.Min;
 
 @Tag(name = "휴가신청Controller")
 @RestController
-@Slf4j
 @RequestMapping("/vacations/v1")
+@Validated
 public class VacationController {
     private VacationService vacationService;
 

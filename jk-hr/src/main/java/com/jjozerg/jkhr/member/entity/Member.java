@@ -6,10 +6,11 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.jjozerg.jkhr.common.JkHrConstants.*;
+import static com.jjozerg.jkhr.common.CroquiscomHrConstants.*;
 
 /**
  * packageName : com.jjozerg.jkhr.member.entity

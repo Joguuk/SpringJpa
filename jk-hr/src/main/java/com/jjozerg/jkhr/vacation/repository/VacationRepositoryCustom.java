@@ -1,11 +1,8 @@
 package com.jjozerg.jkhr.vacation.repository;
 
-import com.jjozerg.jkhr.vacation.dto.VacationListResDto;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.jjozerg.jkhr.vacation.dto.VacationListResDto.*;
 import static com.jjozerg.jkhr.vacation.dto.VacationListResDto.VacationListDto;
 
 /**
@@ -26,4 +23,3 @@ public interface VacationRepositoryCustom {
 
     boolean retrieveIsDuplicateVacationDate(Long memberId, int vactionYear, LocalDateTime vacationStartDttm, LocalDateTime vacationEndDttm);
 }
-

@@ -1,6 +1,6 @@
 package com.jjozerg.jkhr.config.interceptor;
 
-import com.jjozerg.jkhr.common.JkHrConstants;
+import com.jjozerg.jkhr.common.CroquiscomHrConstants;
 import com.jjozerg.jkhr.common.MessageUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -26,7 +26,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         HttpSession session = request.getSession();
 
         // 로그인 session이 없는 경우 AuthenticationException
-        if (session == null || session.getAttribute(JkHrConstants.LOGIN_MEMBER) == null) {
+        if (session == null || session.getAttribute(CroquiscomHrConstants.LOGIN_MEMBER) == null) {
             throw new AuthenticationException(MessageUtils.getMessages("message.session.error"));
         }
 

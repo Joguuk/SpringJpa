@@ -1,5 +1,6 @@
 package com.jjozerg.jkhr.vacation.entity;
 
+import com.jjozerg.jkhr.common.CroquiscomHrConstants;
 import com.jjozerg.jkhr.common.MessageUtils;
 import com.jjozerg.jkhr.config.exception.BusinessException;
 import com.jjozerg.jkhr.member.entity.Member;
@@ -9,10 +10,10 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-import static com.jjozerg.jkhr.common.JkHrConstants.VacationKind;
-import static com.jjozerg.jkhr.common.JkHrConstants.VacationStatus;
-import static com.jjozerg.jkhr.common.JkHrConstants.VacationStatus.*;
-import static com.jjozerg.jkhr.common.JkHrConstants.VacationStatus.CANCEL;
+import static com.jjozerg.jkhr.common.CroquiscomHrConstants.VacationCount.*;
+import static com.jjozerg.jkhr.common.CroquiscomHrConstants.VacationKind;
+import static com.jjozerg.jkhr.common.CroquiscomHrConstants.VacationStatus;
+import static com.jjozerg.jkhr.common.CroquiscomHrConstants.VacationStatus.*;
 
 /**
  * packageName : com.jjozerg.jkhr.vacation.entity
@@ -32,9 +33,6 @@ import static com.jjozerg.jkhr.common.JkHrConstants.VacationStatus.CANCEL;
 @NoArgsConstructor
 @Builder
 public class VacationRequest {
-    @Transient
-    public static final Integer DEFAULT_VACATION_COUNT = 15;    // 부여받은 휴가 일수
-
     @Id @GeneratedValue
     @Column(name = "vacation_req_id")
     private Long id;
@@ -67,7 +65,7 @@ public class VacationRequest {
      * @date 2022/02/13 7:11 오후
      */
     public boolean checkVacationCount(Double useVacationCount) throws Exception {
-        if (useVacationCount + vacationCount >= DEFAULT_VACATION_COUNT) {
+        if (useVacationCount + vacationCount >= DEFAULT.getVacationCount()) {
             throw new Exception(MessageUtils.getMessages("message.vacation.request.fail.max.count"));    // 신청 가능한 휴가 가능일수를 초과했습니다.
         }
 
@@ -111,16 +109,12 @@ public class VacationRequest {
     }
 
     /**
-     * 신청 일자에 휴가가 중복 신청된 경우, BusinessException을 발생시킨다.
+     * 휴가 신청 후 남은 휴가 일수를 반환한다.
      *
      * @author joguk
-     * @date 2022/02/14 10:40 오후
+     * @date 2022/02/16 12:00 오전
      */
-    public boolean checkVacationDuplicateDate(boolean isDuplicateVacationDate) {
-        if (isDuplicateVacationDate) {
-            throw new BusinessException(MessageUtils.getMessages("message.vacation.request.fail.duplicate"));    // 신청하신 휴가 일자에 이미 휴가가 신청되어 있습니다.
-        }
-
-        return true;
+    public double getRemainingVacationCount(Double usedVacationCount) {
+        return DEFAULT.getVacationCount() - usedVacationCount - vacationCount;
     }
 }

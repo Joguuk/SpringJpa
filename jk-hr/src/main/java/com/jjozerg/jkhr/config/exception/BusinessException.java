@@ -1,7 +1,7 @@
 package com.jjozerg.jkhr.config.exception;
 
 /**
- * packageName : com.jjozerg..config.exception
+ * packageName : com.jjozerg.jkhr.config.exception
  * fileName : BusinessException
  * author : joguk
  * date : 2022/02/13

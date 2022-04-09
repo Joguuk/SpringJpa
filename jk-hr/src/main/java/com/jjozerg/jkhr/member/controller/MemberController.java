@@ -1,11 +1,12 @@
 package com.jjozerg.jkhr.member.controller;
 
-import com.jjozerg.jkhr.common.JkHrConstants;
+import com.jjozerg.jkhr.common.CroquiscomHrConstants;
 import com.jjozerg.jkhr.common.MessageUtils;
 import com.jjozerg.jkhr.member.dto.MemberResDto;
 import com.jjozerg.jkhr.member.entity.Member;
 import com.jjozerg.jkhr.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
  * -----------------------------------------------------------
  */
 
+@Tag(name = "회원Controller")
 @RestController
 @RequestMapping("/members/v1")
 public class MemberController {
@@ -54,7 +56,7 @@ public class MemberController {
 
         // 세션 저장
         HttpSession session = request.getSession();
-        session.setAttribute(JkHrConstants.LOGIN_MEMBER, member);
+        session.setAttribute(CroquiscomHrConstants.LOGIN_MEMBER, member);
 
         return MessageUtils.getMessages("message.login.success", new Object[]{member.getMemberName()});
     }
